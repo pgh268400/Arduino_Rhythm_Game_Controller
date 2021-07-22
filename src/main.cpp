@@ -1,4 +1,5 @@
 //라이브러리 참고 :: https://github.com/dmadison/HID_Buttons
+//조이스틱 마우스 제어 참고 :: https://rasino.tistory.com/247
 
 #include "Arduino.h"
 #include "Keyboard.h"
