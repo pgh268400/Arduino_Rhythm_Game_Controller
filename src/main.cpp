@@ -1,5 +1,4 @@
 //라이브러리 참고 :: https://github.com/dmadison/HID_Buttons
-//조이스틱 마우스 제어 참고 :: https://rasino.tistory.com/247
 
 #include "Arduino.h"
 #include "Keyboard.h"
@@ -73,17 +72,19 @@ void loop() {
   
 }
 
-int readJoystick(int axis) {
-  int val=analogRead(axis);
-  val=map(val, 0, 1023, -4, 4);  //들어온 아날로그 값을 -4~4로 조정한다.
-  if(val <=3 && val >= -3)   // 미세한 이동 값은 무시한다. (떨림 방지)
-    return 0;
-  else
-  //마우스가 너무 급격하게 움직이므로 움직이는 양을 조절한다.
-    if(val < 0){
-      val = -2;
+int readJoystick(int axis) { 
+  int reading = analogRead(axis); 
+  reading = map(reading, 0, 1023, 0, 12); // 0~12 사이의 값으로 변환
+  int distance = reading - 6; //축값은 0~12인데 중심값이 6을 기준으로 +방향과 -방향값을 갖음
+  if (abs(distance) < 3) { //미세한 떨림은 무시함.
+    distance = 0;
+  } else {
+    //너무 급격하게 움직이므로 속도를 고정함.
+    if(distance < 0){
+      distance = -1;
     } else {
-      val = 2;
+      distance = 1;
     }
-    return val;  //맵핑된 값 전달 
+  }
+  return distance; //해당 축의 마우스 이동값을 반환
 }
